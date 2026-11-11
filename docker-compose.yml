@@ -1,0 +1,59 @@
+# Sobe a stack completa: Postgres + API (NestJS) + Web (Next.js).
+#
+# A API é construída a partir do repositório fullstack-template-api. Por
+# padrão ele é procurado na pasta irmã (../fullstack-template-api); para usar
+# direto do GitHub, sem clonar:
+#   API_CONTEXT=https://github.com/lrmedeiros/fullstack-template-api.git#main docker compose up --build
+name: fullstack-template
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d app"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ${API_CONTEXT:-../fullstack-template-api}
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://postgres:postgres@db:5432/app
+      # Só para desenvolvimento local. Em produção, injete via secret manager.
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret-change-me-0123456789abcdef}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
+      WEB_URL: http://localhost:3000
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALLBACK_URL: http://localhost:3001/api/auth/google/callback
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: .
+    environment:
+      API_URL: http://api:3001/api
+      API_PUBLIC_URL: http://localhost:3001/api
+      # Em produção (HTTPS) o cookie de sessão é Secure; aqui é HTTP local.
+      COOKIE_SECURE: "false"
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:

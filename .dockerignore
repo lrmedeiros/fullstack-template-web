@@ -1,0 +1,12 @@
+node_modules
+.next
+coverage
+storybook-static
+.git
+.github
+.husky
+.storybook
+.env
+.env.*
+!.env.example
+*.log
