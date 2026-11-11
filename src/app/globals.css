@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Os componentes usam só estas cores semânticas
+ * (bg-surface, text-muted, bg-primary...), então trocar o tema é editar
+ * este arquivo, sem caçar classes pelo código.
+ */
+:root {
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --border: #e2e8f0;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-foreground: #ffffff;
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+  --success: #15803d;
+  --success-soft: #f0fdf4;
+  --warning: #a16207;
+  --warning-soft: #fefce8;
+  --ring: #6366f1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --surface: #0f172a;
+    --foreground: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1e293b;
+    --primary: #818cf8;
+    --primary-hover: #a5b4fc;
+    --primary-foreground: #0f172a;
+    --danger: #f87171;
+    --danger-soft: #450a0a;
+    --success: #4ade80;
+    --success-soft: #052e16;
+    --warning: #facc15;
+    --warning-soft: #422006;
+    --ring: #a5b4fc;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
